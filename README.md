@@ -17,10 +17,11 @@ Before starting out, we must first take care of a couple of things.
 If you haven't already, make sure you install the latest version of node.js, link: https://nodejs.org/en
 
 
-
 create our database! For this project, we will be using mongodb to store information from and to our server, as it is what we currently use to store all of SHPE UF's info from our website!
 
 I have created a short tutorial video to show how to set up mongoDB for this project: 
+
+Another important step if you have not done so already, open a terminal command and run "npm install" in the foulder where the package.json and package-lock.json are located. This will install all the dependencies you may need (note: if you decide to implement something extra, you will have to npm install said dependencies) But for now this should be enough to get the backend runnning! 
 
 ## Navigation
 
