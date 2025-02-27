@@ -1,45 +1,76 @@
-# SHPE UF SWE Team Training Backend Template
+# Imogine
 
 ![alt text](https://shpeuf.s3.amazonaws.com/public/misc/logo_horizontal.png "SHPE logo")
 
-Congrats one more time on being selected as prospective software developer directors! (Sweenies) In this repository, you will find a template that you would want to use to build the backend functionality of your training project. 
 
-## Why This Template?
+## Project Name & Summary
+Imogine is an innovative AI-powered music creation app that lets you compose and modify songs in real-time using just your hands. Leveraging computer vision and hand tracking, Imogine transforms your gestures into pitch adjustments, harmonies, and vocal effects—allowing you to intuitively shape sound like an instrument. Whether you’re a musician, producer, or just someone who loves experimenting with music, Imogine turns creativity into an immersive, hands-free experience.
 
-This template should function as a building foundation for the backend of your project. In it, you will find how your web app should be structured, although it is not completely necessary, I truly recommend following this structure as it very closely mimics the way our own server is structured (plus it makes your JPM work easier) and will yield you better results once you are integraded into the team.
+## Target User
+### Intended Audience
+Imogine is designed for musicians, producers, digital artists, and creative tech enthusiasts, as well as students and educators interested in exploring the intersection of music and AI. It also appeals to accessibility advocates looking for new ways to make music production more inclusive through gesture-based interaction.
 
-Every file has it's own section in the readME(See navigation below) explaining its purpose and role in the proper function of your website. Each file in the repository also includes several commented out examples and explanations that you can follow to adjust it to your preferences and choice of theme/topic/info used.
+### User Needs Addressed
+	•	Accessibility & Inclusivity – Provides an intuitive, hands-free way to create music, making it easier for users with mobility impairments or those unfamiliar with traditional instruments.
+	•	Innovation & Creativity – Allows musicians and producers to experiment with unique, AI-enhanced sounds using body movements instead of traditional controls.
+	•	Simplicity & Engagement – Removes the complexity of DAWs (Digital Audio Workstations) by offering a playful, real-time way to manipulate pitch, harmonies, and effects through hand gestures.
+	•	Educational Value – Introduces students and tech enthusiasts to the world of AI-driven music production, computer vision, and gesture-based interfaces in an interactive way.
 
-## Getting Started
+## Purpose & Problem Statement
+### Solution & Usefulness
+Imogine redefines how we create and interact with music by eliminating the barriers of traditional instruments and complex production software. Many aspiring artists struggle with expensive equipment, technical know-how, or physical limitations that prevent them from expressing their creativity. By using hand gestures to manipulate pitch, harmonies, and effects in real time, Imogine provides an intuitive and accessible way to compose music—perfect for musicians, producers, and anyone who wants to explore sound in a completely new way.
+### Superpower
+If Imogine were a superhero, its superpower would be “Gesture-to-Melody Alchemy”—the ability to transform simple hand movements into  musical compositions, empowering anyone to become a music creator with just a wave of their hand! 
 
-Before starting out, we must first take care of a couple of things. 
+## Core Features
+### Hand Gesture-Based Music Control (Computer Vision + React + TensorFlow.js)
+	•	Uses AI-powered hand tracking to recognize different gestures, allowing users to manipulate pitch, add harmonies, and apply vocal effects in real-time.
+### AI-Powered Sound Modulation (Python + PyTorch + ONNX + Flask)
+	•	Leverages machine learning models to analyze vocal input and dynamically adjust pitch, tone, and harmonics based on recognized gestures.
+### Real-Time Audio Processing with GraphQL API (Node.js + Express + WebSockets)
+	•	A GraphQL-powered backend enables low-latency real-time interactions, ensuring seamless gesture-to-audio response and cloud-based music modifications.
+### Cloud Storage & Song History (MongoDB + Firebase + Azure)
+	•	Saves user-generated compositions in the cloud, allowing musicians to access, remix, and share their gesture-driven music across devices.
+### Intuitive Web-Based Interface (React + Electron.js for Desktop App)
+	•	A sleek, interactive UI that visualizes hand tracking, pitch changes, and real-time audio effects, making the creative process immersive and easy to navigate.
 
-If you haven't already, make sure you install the latest version of node.js, link: https://nodejs.org/en
+
+## Technical Overview
+### Frontend (React) ↔ Backend (Express + Node.js + GraphQL API)
+- The React frontend communicates with the backend via a GraphQL API, allowing users to send queries and mutations related to song modifications, audio effects, and stored compositions.
+- WebSockets (via Apollo GraphQL Subscriptions) enable real-time gesture recognition feedback and music processing.
+
+### Backend (Node.js + Express + Flask ML Service) ↔ Database (MongoDB)
+- The GraphQL API on Express handles requests from the frontend and interacts with MongoDB to store user compositions, settings, and song data.
+-The Flask-based AI module (running PyTorch/ONNX) processes audio and gesture data, returning modified sound waveforms or pitch/harmony effects back to the Node.js server.
+
+### Backend ↔ Computer Vision Hand Tracking
+The hand tracking model (TensorFlow.js) runs on the frontend for real-time gesture detection. Processed gesture data is sent via GraphQL mutations to the backend for sound processing.
+
+### Third Party APIs & Tools
+- TensorFlow.js / MediaPipe Hands API – For real-time hand tracking in the browser.
+- Web Audio API – For manipulating audio output directly in the frontend.
+- Firebase / Cloudinary – To store audio files for user compositions.
+- Azure Functions / AWS Lambda – To handle heavy AI processing tasks in a serverless manner if needed.
 
 
-create our database! For this project, we will be using mongodb to store information from and to our server, as it is what we currently use to store all of SHPE UF's info from our website!
 
-I have created a short tutorial video to show how to set up mongoDB for this project: 
 
-Another important step if you have not done so already, open a terminal command and run "npm install" in the foulder where the package.json and package-lock.json are located. This will install all the dependencies you may need (note: if you decide to implement something extra, you will have to npm install said dependencies) But for now this should be enough to get the backend runnning! 
 
-## Navigation
+
+
+
+
+
+
+
+
 
 ### index.js ###
 
 The index.js file is the entry point of your backend application. It brings together all the key components of your GraphQL server, connects to your MongoDB database, and starts the server.
 
 **Purpose:**
-
-* Set Up the Apollo Server: This file configures and initializes the Apollo Server, which handles GraphQL queries, mutations, and subscriptions.
-
-* Connect to MongoDB: It establishes a connection to the MongoDB database using Mongoose.
-
-* Start the Server: Once the database is successfully connected, the server starts and listens for incoming requests on the specified port.
-
-**ApolloServer documentation:** https://www.apollographql.com/docs/apollo-server/api/apollo-server
-
-**Mongoose docs:** https://mongoosejs.com/docs/connections.html
 
 ### config.js ###
 This file is used to connect to the mongodb. not much to see here. watch video!
@@ -49,11 +80,6 @@ This file is used to connect to the mongodb. not much to see here. watch video!
 #### TypeName.js
 
 The files in the model folder look extremely similar to the definitions already established on TypeDefs.js, so this part is pretty straightforward.
-
-This defines the database schema using Mongoose (for MongoDB).
-It specifies how data is stored and managed in MongoDB.
-
-Example: 
 
 ```
 const { model, Schema } = require('mongoose');
@@ -66,37 +92,3 @@ const artistSchema = new Schema({
 module.exports = model('Artist', artistSchema);
 ```
 
-### graphql folder
-
-#### -TypeDefs.js
-
-The TypeDefs.js file defines the GraphQL schema for your backend. This file is where you specify the structure of the data that can be queried or mutated through your API.
-
-The most basic components of a GraphQL schema are Object types,  which just represent a kind of object you can fetch from your service, and what fields it has. In SDL, we represent it like this:
-
-```
-type User {
-  id: ID!
-  name: String
-}
-
-type Query {
-  user(id: ID!): User
-}
-```
-
-### resolvers 
-
-If you want a more comprehensive tutorial or you like learning by doing before starting, check out this tutorial! https://www.apollographql.com/tutorials/lift-off-part2?referrer=docs-content
-
-In this template only one resolver (and type) is used. If you are using more than one type, for example, posts, users & comments, you will have to add the correspondent files manually.
-
-#### -index.js
-
-This index.js file inside the resolvers serves to export each individual resolver file.
-
-#### -typename.js
-
-"typename" is a placeholder for the name of your type. It is good practice to name this file the same as what is on your TypeDefs & Schema. 
-
-This is one of the most important files as here is where you will be adding functionality/definitions to your queries and mutations.
