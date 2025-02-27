@@ -23,11 +23,11 @@ If Imogine were a superhero, its superpower would be “Gesture-to-Melody Alchem
 ### Hand Gesture-Based Music Control (Computer Vision + React + TensorFlow.js)
 Uses AI-powered hand tracking to recognize different gestures, allowing users to manipulate pitch, add harmonies, and apply vocal effects in real-time.
 ### AI-Powered Sound Modulation (Python + PyTorch + ONNX + Flask)
-Leverages machine learning models to analyze vocal input and dynamically adjust pitch, tone, and harmonics based on recognized gestures.
+Leverages machine learning models to analyze vocal input and adjust pitch, tone, and harmonics based on recognized gestures.
 ### Real-Time Audio Processing with GraphQL API (Node.js + Express + WebSockets)
-A GraphQL-powered backend enables low-latency real-time interactions, ensuring seamless gesture-to-audio response and cloud-based music modifications.
+A GraphQL-powered backend enables low-latency real-time interactions, ensuring smooth gesture-to-audio response and cloud-based music modifications.
 ### Cloud Storage & Song History (MongoDB + Firebase + Azure)
-Saves user-generated compositions in the cloud, allowing musicians to access, remix, and share their gesture-driven music across devices.
+Saves user-generated compositions in the cloud, allowing musicians to access, remix, and share their music across devices.
 ### Intuitive Web-Based Interface (React + Electron.js for Desktop App)
 A sleek, interactive UI that visualizes hand tracking, pitch changes, and real-time audio effects, making the creative process immersive and easy to navigate.
 
