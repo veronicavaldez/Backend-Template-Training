@@ -8,11 +8,11 @@ type Character {
   appearsIn: [Episode!]!
 }
 
-The language is readable, but let’s go over it so that we can have a shared vocabulary:
+The language is readable, but let's go over it so that we can have a shared vocabulary:
 
-    Character is a GraphQL Object type, meaning it’s a type with some fields. Most of the types in your schema will be Object types.
+    Character is a GraphQL Object type, meaning it's a type with some fields. Most of the types in your schema will be Object types.
     name and appearsIn are fields on the Character type. That means that name and appearsIn are the only fields that can appear in any part of a GraphQL query that operates on the Character type.
-    String is one of the built-in Scalar types. These are types that resolve to a single scalar value and can’t have sub-selections in the query. We’ll go over Scalar types more later.
+    String is one of the built-in Scalar types. These are types that resolve to a single scalar value and can't have sub-selections in the query. We'll go over Scalar types more later.
     String! means that the field is a Non-Null type, meaning the GraphQL service promises to give you a value whenever you query this field. In SDL, we represent those with an exclamation mark.
     [Episode!]! represents an List type of Episode objects. When a List is Non-Null, you can always expect an array (with zero or more items) when you query the appearsIn field. In this case, since Episode! is also Non-Null within the list, you can always expect every item in the array to be an Episode object.
 
@@ -36,13 +36,42 @@ Ex:
 */
 
 const TypeDefs = gql`
+  type GestureEffect {
+    id: ID!
+    type: String!           # e.g., "pitch", "harmony", "volume"
+    parameters: JSON        # Store gesture-specific parameters
+    timestamp: String!
+  }
 
-    #write your code here
+  type AudioSession {
+    id: ID!
+    userId: String!
+    isActive: Boolean!
+    currentEffects: [GestureEffect!]!
+    startedAt: String!
+  }
 
+  type Query {
+    getActiveSession(userId: String!): AudioSession
+    getCurrentEffects(sessionId: ID!): [GestureEffect!]!
+  }
 
+  type Mutation {
+    startSession: AudioSession!
+    endSession(sessionId: ID!): Boolean!
+    applyGestureEffect(
+      sessionId: ID!
+      type: String!
+      parameters: JSON!
+    ): GestureEffect!
+  }
 
+  type Subscription {
+    effectApplied(sessionId: ID!): GestureEffect!
+    sessionUpdated(sessionId: ID!): AudioSession!
+  }
 
-
+  scalar JSON
 `;
 
 module.exports = TypeDefs;
