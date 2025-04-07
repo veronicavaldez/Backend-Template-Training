@@ -3,11 +3,15 @@ import * as handPoseDetection from '@tensorflow-models/hand-pose-detection';
 import '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';
 
+// Define pitch zones (adjust as needed)
+const PITCH_ZONES = 5; // e.g., 5 zones for pitch level
+
 function HandGestureDetector({ onGestureDetected }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [detector, setDetector] = useState(null);
   const [prevWristX, setPrevWristX] = useState(0);
+  const [currentPitchZone, setCurrentPitchZone] = useState(null); // State to track current zone
   
   useEffect(() => {
     async function setupCamera() {
@@ -68,9 +72,10 @@ function HandGestureDetector({ onGestureDetected }) {
           
           const hands = await detector.estimateHands(video);
           
-          // Draw landmarks on canvas
+          // Draw landmarks and pitch markers on canvas
           const ctx = canvas.getContext('2d');
           ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawPitchMarkers(ctx, canvas.width, canvas.height); // Draw markers first
           
           if (hands.length > 0) {
             // Scale coordinates to match canvas size
@@ -81,16 +86,25 @@ function HandGestureDetector({ onGestureDetected }) {
             drawHand(hands[0], ctx, scaleX, scaleY);
             
             // Process hand landmarks and detect gestures
-            const gesture = processHandGesture(hands[0]);
+            const gesture = processHandGesture(hands[0], canvas.height); // Pass canvas height for normalization
             if (gesture) {
               onGestureDetected(gesture);
+              // Update current pitch zone if pitch gesture detected
+              if (gesture.type === 'pitch') {
+                setCurrentPitchZone(gesture.parameters.zone); 
+              }
+            } else {
+              setCurrentPitchZone(null); // Reset zone if no pitch gesture
             }
             
             // Update previous wrist position for movement tracking
             setPrevWristX(hands[0].keypoints[0].x);
+          } else {
+             setCurrentPitchZone(null); // Reset zone if no hand detected
           }
         } catch (error) {
           console.error('Hand detection error:', error);
+           setCurrentPitchZone(null); // Reset on error
         }
         
         animationFrameId = requestAnimationFrame(detectHands);
@@ -110,48 +124,88 @@ function HandGestureDetector({ onGestureDetected }) {
     };
   }, [detector, onGestureDetected]);
   
-  function processHandGesture(hand) {
+  // Function to draw horizontal pitch markers
+  function drawPitchMarkers(ctx, width, height) {
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'; // Light, semi-transparent lines
+    ctx.lineWidth = 1;
+    ctx.font = '10px Arial';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+
+    const zoneHeight = height / PITCH_ZONES;
+
+    for (let i = 1; i < PITCH_ZONES; i++) {
+      const y = zoneHeight * i;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
+      ctx.stroke();
+      // Optional: Label zones
+      // ctx.fillText(`Zone ${PITCH_ZONES - i}`, 5, y - 5); 
+    }
+     // Highlight the current zone
+     if (currentPitchZone !== null) {
+        const zoneY = (PITCH_ZONES - 1 - currentPitchZone) * zoneHeight;
+        ctx.fillStyle = 'rgba(79, 172, 254, 0.2)'; // Highlight color
+        ctx.fillRect(0, zoneY, width, zoneHeight);
+      }
+  }
+  
+  function processHandGesture(hand, canvasHeight) { // Accept canvasHeight
     const landmarks = hand.keypoints;
+    // Use landmark 9 (MIDDLE_FINGER_MCP) as the reference for palm height
+    const palmCenter = landmarks[9]; 
     
-    // Get key finger positions
-    const wrist = landmarks[0];
-    const thumbTip = landmarks[4];
-    const indexTip = landmarks[8];
-    const middleTip = landmarks[12];
-    const ringTip = landmarks[16];
-    const pinkyTip = landmarks[20];
-    
-    // Count extended fingers (fingers that are raised)
+    // --- Pitch Detection based on Wrist Height ---
+    // Normalize Y coordinate (0 at bottom, 1 at top)
+    const normalizedY = 1 - (palmCenter.y / canvasHeight); // Use palm center Y, invert Y-axis
+    const clampedY = Math.max(0, Math.min(1, normalizedY)); // Clamp between 0 and 1
+
+    // Determine pitch zone (0 to PITCH_ZONES - 1)
+    const pitchZone = Math.min(PITCH_ZONES - 1, Math.floor(clampedY * PITCH_ZONES));
+
+    // You could map pitchZone to actual pitch values (e.g., MIDI notes, frequency multipliers)
+    // For now, we send the zone and the normalized value
+    const pitchGesture = {
+      type: 'pitch',
+      parameters: { 
+        level: clampedY, // Normalized value 0-1
+        zone: pitchZone   // Discrete zone index
+      }
+    };
+    // Always emit pitch if hand is detected for continuous control
+    onGestureDetected(pitchGesture); 
+    // Set current pitch zone for visualization feedback
+    setCurrentPitchZone(pitchZone);
+
+
+    // --- Harmony Gesture Detection (Existing Logic) ---
     const extendedFingers = countExtendedFingers(landmarks);
     
-    // Harmony gesture - 2 fingers extended (for one harmony a third below)
     if (extendedFingers === 2 && 
         isFingerExtended(landmarks, 'index') && 
         isFingerExtended(landmarks, 'middle')) {
-      return {
+      return { // Return harmony, overwriting pitch for this frame if needed
         type: 'harmony',
-        parameters: { 
-          intervals: [-4], // Third below
-          strength: 0.7 
-        }
+        parameters: { intervals: [-4], strength: 0.7 } 
       };
     }
     
-    // Harmony gesture - 3 fingers extended (for harmonies both above and below)
     if (extendedFingers === 3 && 
         isFingerExtended(landmarks, 'index') && 
         isFingerExtended(landmarks, 'middle') &&
         isFingerExtended(landmarks, 'ring')) {
-      return {
+      return { // Return harmony
         type: 'harmony',
-        parameters: { 
-          intervals: [-4, 4], // Third below and third above
-          strength: 0.7 
-        }
+        parameters: { intervals: [-4, 4], strength: 0.7 } 
       };
     }
     
-    return null;
+    // If no other specific gesture is detected, we let the previously called
+    // onGestureDetected(pitchGesture) stand as the gesture for this frame.
+    // If you *only* want pitch when NO other gesture is active, return pitchGesture here.
+    // Example: return pitchGesture; 
+    
+    return null; // Return null if only pitch was detected (already sent) or no specific gesture matched
   }
   
   // Helper function to count extended fingers
@@ -277,14 +331,15 @@ function HandGestureDetector({ onGestureDetected }) {
   }
   
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative', width: '320px', height: '240px' }}>
       <video 
         ref={videoRef}
         style={{ 
           transform: 'scaleX(-1)',
-          width: '320px',
-          height: '240px',
-          borderRadius: '8px'
+          width: '100%', // Use 100% to fill container
+          height: '100%', // Use 100% to fill container
+          borderRadius: '8px',
+          display: 'block' // Prevents small gaps
         }}
       />
       <canvas
@@ -294,9 +349,10 @@ function HandGestureDetector({ onGestureDetected }) {
           left: 0,
           top: 0,
           transform: 'scaleX(-1)',
-          width: '320px',
-          height: '240px',
-          borderRadius: '8px'
+          width: '100%', // Match video size
+          height: '100%', // Match video size
+          borderRadius: '8px',
+          pointerEvents: 'none' // Allow interaction with elements below if any
         }}
       />
     </div>

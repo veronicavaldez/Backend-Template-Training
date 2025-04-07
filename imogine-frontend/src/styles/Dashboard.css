@@ -1,35 +1,39 @@
-.dashboard-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  color: #ffffff;
-  font-family: 'Roboto', sans-serif;
+/* General Styles */
+body {
+  font-family: 'Roboto', 'Segoe UI', 'Helvetica Neue', sans-serif;
 }
 
+.dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #e0e0e0; /* Slightly lighter text */
+  padding: 1em 0; /* Add vertical padding */
+}
+
+/* Header Section */
 .dashboard-header {
-  padding: 2rem;
-  text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem 1rem; /* Adjusted padding */
+  border-bottom: none; /* Removed border */
+  margin-bottom: 2rem; /* Added margin */
 }
 
 .app-logo {
-  height: 120px;
+  height: 100px; /* Slightly smaller logo */
   width: auto;
+  margin-bottom: 1rem;
   animation: logo-pulse 3s infinite ease-in-out;
-  border-radius: 10px;
-  object-fit: contain;
 }
 
 @keyframes logo-pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.03); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
 }
 
-.dashboard-header h1 {
-  font-size: 3rem;
-  margin: 0.5rem 0;
+.main-title {
+  font-size: 3.5em !important; /* Larger title */
+  margin-bottom: 0.25em !important;
+  font-weight: 700 !important;
   background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -37,106 +41,210 @@
 }
 
 .tagline {
-  font-size: 1.2rem;
+  font-size: 1.3em !important;
+  font-weight: 300 !important;
   opacity: 0.8;
-  margin-top: 0;
+  margin-top: 0 !important;
 }
 
-.dashboard-main {
-  flex: 1;
-  padding: 2rem;
-  max-width: 1000px;
-  margin: 0 auto;
-  width: 100%;
+/* Intro Section */
+.intro-segment {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 12px !important; /* More rounded corners */
+  border: none !important;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2) !important;
+  margin-bottom: 2.5rem !important;
 }
 
-.intro-section {
-  margin-bottom: 3rem;
+.section-header {
+  margin-bottom: 1em !important;
+  font-weight: 500 !important;
+  color: #ffffff !important; /* Ensure headers are white */
+}
+
+.intro-text {
+  color: #c0c0c0; /* Slightly dimmer paragraph text */
+  font-size: 1.15em;
+  line-height: 1.7;
   text-align: center;
+  max-width: 650px;
+  margin: 0 auto 1.5rem auto; /* Added bottom margin */
 }
 
-.intro-section h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.intro-section p {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
+/* Action Section (Start Button & Hint) */
 .action-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 3rem;
+  text-align: center;
+  margin-top: 2em; /* Add space above */
 }
 
 .start-session-btn {
-  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-  border: none;
-  border-radius: 50px;
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 1.2rem;
-  font-weight: bold;
-  padding: 1rem 2.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%) !important;
+  border-radius: 50px !important;
+  padding: 1em 2.5em !important;
+  font-size: 1.1em !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3) !important;
+  transition: all 0.3s ease !important;
 }
 
 .start-session-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6);
+  transform: translateY(-3px) !important;
+  box-shadow: 0 7px 25px rgba(79, 172, 254, 0.5) !important;
 }
 
 .start-session-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  background: grey !important;
 }
 
 .gesture-hint {
-  margin-top: 1.5rem;
-  font-style: italic;
-  opacity: 0.8;
+  margin: 1.5em auto 0 auto !important;
+  background: rgba(33, 133, 208, 0.15) !important;
+  color: #a0d3ff !important; /* Lighter hint text */
+  border: 1px solid rgba(79, 172, 254, 0.2) !important;
+  border-radius: 6px !important;
+  max-width: 450px;
+  font-size: 0.95em !important;
 }
 
-.recent-sessions {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  padding: 1.5rem;
+/* Recent Sessions Section */
+.recent-sessions-segment {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 12px !important;
+  border: none !important;
+  padding: 1.5rem !important;
+  min-height: 200px; /* Ensure segment has some height */
+  position: relative; /* For Dimmer positioning */
 }
 
-.recent-sessions h3 {
-  margin-top: 0;
-  color: #4facfe;
+.session-cards {
+  margin-top: 1.5rem !important;
 }
 
-.placeholder-text {
-  opacity: 0.6;
-  font-style: italic;
+.session-card {
+  background: rgba(40, 50, 80, 0.5) !important; /* Darker card background */
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
 }
 
+.session-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+.session-card-header {
+  color: #e0e0e0 !important;
+  font-size: 1.1em !important;
+}
+
+.session-card-meta {
+  color: #00f2fe !important; /* Bright cyan meta */
+  font-size: 0.9em !important;
+  margin-top: 0.3em !important;
+}
+
+.session-card-description {
+  color: #b0b0b0 !important; /* Slightly lighter description */
+  font-size: 0.95em !important;
+  margin-top: 0.7em !important;
+}
+
+.play-recording-btn {
+  background: transparent !important;
+  border: 1px solid #4facfe !important;
+  color: #4facfe !important;
+  transition: background-color 0.2s ease, color 0.2s ease !important;
+}
+
+.play-recording-btn:hover {
+  background-color: #4facfe !important;
+  color: #ffffff !important;
+}
+
+.no-sessions-message {
+  background: transparent !important;
+  border: 1px dashed rgba(255, 255, 255, 0.2) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  text-align: center !important;
+  box-shadow: none !important;
+  width: 100%;
+}
+
+.no-sessions-message .icon {
+  color: rgba(255, 255, 255, 0.3) !important;
+  margin-bottom: 0.5rem;
+}
+
+.no-sessions-message .header {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Modal */
+.recording-modal .header {
+  color: #eee !important;
+}
+
+.recording-modal audio {
+  filter: invert(10%) sepia(10%) saturate(150%) hue-rotate(180deg);
+  border-radius: 5px;
+}
+
+/* Footer */
 .dashboard-footer {
-  text-align: center;
-  padding: 1.5rem;
-  opacity: 0.7;
-  font-size: 0.9rem;
+  padding: 2rem 1rem;
+  margin-top: 2rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9em;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .dashboard-header h1 {
-    font-size: 2.5rem;
+  .main-title {
+    font-size: 2.8em !important;
   }
   
-  .intro-section h2 {
-    font-size: 1.8rem;
+  .tagline {
+    font-size: 1.1em !important;
   }
-  
-  .dashboard-main {
-    padding: 1.5rem;
+
+  .section-header {
+    font-size: 1.5em !important; /* Adjust section header size */
+  }
+
+  .intro-text {
+    font-size: 1.05em;
+  }
+
+  .session-cards {
+    justify-content: center !important; /* Center cards on mobile */
+  }
+
+  .session-card {
+    width: calc(90% - 1em) !important; /* Make cards wider on mobile */
+    margin: 0.5em auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 2.2em !important;
+  }
+
+  .tagline {
+    font-size: 1em !important;
+  }
+
+  .start-session-btn {
+    font-size: 1em !important;
+    padding: 0.8em 2em !important;
+  }
+
+  .intro-segment,
+  .recent-sessions-segment {
+    padding: 1rem !important;
   }
 } 

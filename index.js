@@ -318,11 +318,28 @@ async function startServer() {
         });
         
         console.log('Conversion complete, sending file');
+        // Explicitly set Content-Type for the converted MP4
+        res.setHeader('Content-Type', 'audio/mp4');
         return res.sendFile(mp4Path);
       }
       
       // For other browsers or already compatible formats, just send the original file
       console.log('Sending original file:', filePath);
+      
+      // Explicitly set Content-Type based on the original file extension
+      if (originalExtension === '.mp4') {
+          res.setHeader('Content-Type', 'audio/mp4');
+      } else if (originalExtension === '.mp3') {
+          res.setHeader('Content-Type', 'audio/mpeg'); // Use audio/mpeg for mp3
+      } else if (originalExtension === '.aac') {
+          res.setHeader('Content-Type', 'audio/aac');
+      } else if (originalExtension === '.ogg') {
+          res.setHeader('Content-Type', 'audio/ogg');
+      } else {
+          // Default to webm or let sendFile guess, but webm is common
+          res.setHeader('Content-Type', 'audio/webm');
+      }
+      
       return res.sendFile(filePath);
     } catch (error) {
       console.error('Error serving audio:', error);

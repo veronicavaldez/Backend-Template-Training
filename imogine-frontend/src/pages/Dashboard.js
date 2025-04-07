@@ -16,9 +16,9 @@ import {
   Dimmer,
   Loader,
   Modal,
-  Audio
 } from 'semantic-ui-react';
 import logo from '../assets/imogine-logo.png'; // Make sure you have a logo image
+import '../styles/Dashboard.css'; // Import the CSS file
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -52,263 +52,235 @@ function Dashboard() {
   const handleStartSession = async () => {
     setIsLoading(true);
     try {
+      // Simulate some delay if needed for UX, otherwise remove setTimeout
+      // await new Promise(resolve => setTimeout(resolve, 500)); 
       await startSession();
     } catch (error) {
       setIsLoading(false);
       console.error('Error starting session:', error);
+      // Optionally show a user-friendly error message here
     }
   };
   
   const handlePlayRecording = (recordingPath) => {
     console.log('Playing recording from URL:', recordingPath);
-    console.log('Original recording path:', recordingPath);
-
-    // Extract filename from the path
     const filename = recordingPath.split('/').pop();
-    
-    // Use the API endpoint that handles browser compatibility
     const apiUrl = `http://localhost:4000/api/audio/${filename}`;
     console.log('Using API endpoint:', apiUrl);
-    
-    // Set the selected recording and open the modal
     setSelectedRecording(apiUrl);
     setIsModalOpen(true);
   };
   
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
+    if (!dateString) return 'Invalid date';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleString();
+    } catch (e) {
+      console.error("Error formatting date:", e);
+      return 'Invalid date';
+    }
   };
   
   const countEffects = (effects) => {
-    if (!effects || effects.length === 0) return 0;
-    
-    // Count unique effect types instead of total effects
-    const uniqueEffectTypes = new Set();
-    effects.forEach(effect => {
-      if (effect && effect.type) {
-        uniqueEffectTypes.add(effect.type);
-      }
-    });
-    
+    if (!effects || !Array.isArray(effects) || effects.length === 0) return 0;
+    const uniqueEffectTypes = new Set(effects.map(effect => effect?.type).filter(Boolean));
     return uniqueEffectTypes.size;
   };
   
   return (
-    <Container fluid style={{ 
-      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)', 
-      minHeight: '100vh',
-      padding: '2em'
-    }}>
-      <Segment basic textAlign='center' style={{ marginBottom: '2em' }}>
-        <Image centered size='small' src={logo} style={{ marginBottom: '1em' }} />
-        <Header as='h1' inverted style={{ 
-          fontSize: '3em',
-          background: 'linear-gradient(90deg, #4facfe 0%, #00f2fe 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
-        }}>
-          Imogine
-        </Header>
-        <Header as='h2' inverted style={{ fontWeight: 300, marginTop: 0 }}>
-          Create music with hand gestures
-        </Header>
-      </Segment>
-      
-      <Grid centered stackable>
-        <Grid.Row>
-          <Grid.Column width={12}>
-            <Segment padded='very' style={{ background: 'rgba(255, 255, 255, 0.05)', border: 'none' }}>
-              <Header as='h2' inverted textAlign='center'>
-                Transform Your Movements Into Music
-              </Header>
-              <p style={{ color: 'white', fontSize: '1.2em', textAlign: 'center', lineHeight: 1.6 }}>
-                Imogine is an innovative AI-powered music creation app that lets you compose and modify songs 
-                in real-time using just your hands. Whether you're a musician, producer, or just someone who 
-                loves experimenting with music, Imogine turns creativity into an immersive, hands-free experience.
-              </p>
-              
-              <Divider horizontal inverted>
-                <Header as='h4' inverted>
-                  <Icon name='hand point up outline' />
-                  Get Started
-                </Header>
-              </Divider>
-              
-              <div style={{ textAlign: 'center', margin: '2em 0' }}>
-                <Button 
-                  primary 
-                  size='huge' 
-                  onClick={handleStartSession}
-                  loading={isLoading}
-                  disabled={isLoading}
-                  style={{
-                    background: 'linear-gradient(90deg, #4facfe 0%, #00f2fe 100%)',
-                    borderRadius: '50px',
-                    padding: '1em 2.5em'
-                  }}
-                >
-                  <Icon name='music' />
-                  Start New Session
-                </Button>
-                <Message info style={{ maxWidth: '500px', margin: '1.5em auto', background: 'rgba(33, 133, 208, 0.2)' }}>
-                  <Icon name='info circle' />
-                  Use hand gestures to control pitch, volume, and tempo in real-time!
-                </Message>
-              </div>
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
+    <div className="dashboard-container">
+      <Container>
+        <Segment basic textAlign='center' className="dashboard-header">
+          <Image centered size='small' src={logo} className="app-logo" />
+          <Header as='h1' inverted className="main-title">
+            Imogine
+          </Header>
+        </Segment>
         
-        <Grid.Row>
-          <Grid.Column width={12}>
-            <Segment style={{ background: 'rgba(255, 255, 255, 0.05)', border: 'none' }}>
-              <Header as='h3' inverted>
-                <Icon name='history' />
-                Recent Sessions
-              </Header>
-              
-              {sessionsLoading ? (
-                <div style={{ padding: '2em', textAlign: 'center' }}>
-                  <Loader active inverted>Loading Sessions</Loader>
+        <Grid centered stackable>
+          <Grid.Row>
+            <Grid.Column mobile={16} tablet={12} computer={10}>
+              <Segment padded='very' className="intro-segment">
+                <Header as='h2' inverted textAlign='center' className="section-header">
+                  Transform Your Movements Into Music
+                </Header>
+                <p className="intro-text">
+                  Ccompose and modify songs with just the wave of a hand. 
+                  Imogine the possibilities.
+                </p>
+                
+                <Divider horizontal inverted section>
+                  <Header as='h4' inverted>
+                    <Icon name='hand point up outline' />
+                    Get Started
+                  </Header>
+                </Divider>
+                
+                <div className="action-section">
+                  <Button 
+                    primary 
+                    size='huge' 
+                    onClick={handleStartSession}
+                    loading={isLoading}
+                    disabled={isLoading}
+                    className="start-session-btn"
+                  >
+                    <Icon name='play circle outline' />
+                    Start New Session
+                  </Button>
+                  <Message info compact className="gesture-hint">
+                    <Icon name='info circle' />
+                    Move your hand up and down to change the pitch of the song.
+                  </Message>
                 </div>
-              ) : sessionsError ? (
-                <Message negative>
-                  <Message.Header>Error loading sessions</Message.Header>
-                  <p>{sessionsError.message}</p>
-                  <pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>
-                    {JSON.stringify(sessionsError, null, 2)}
-                  </pre>
-                </Message>
-              ) : (
-                <Card.Group itemsPerRow={3} stackable>
-                  {sessionsData && sessionsData.getUserSessions && sessionsData.getUserSessions.length > 0 ? (
-                    sessionsData.getUserSessions
-                      .filter(session => session.recordingPath) // Only show sessions with recordings
-                      .map(session => (
-                        <Card key={session.id} style={{ background: 'rgba(255, 255, 255, 0.1)' }}>
-                          <Card.Content>
-                            <Card.Header style={{ color: 'white' }}>
-                              Session {session.id.substring(0, 8)}...
-                            </Card.Header>
-                            <Card.Meta style={{ color: '#4facfe' }}>
-                              {formatDate(session.startedAt)}
-                            </Card.Meta>
-                            <Card.Description style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                              {countEffects(session.currentEffects) > 0 
-                                ? `${countEffects(session.currentEffects)} unique effect types used` 
-                                : 'No effects applied'}
-                            </Card.Description>
-                          </Card.Content>
-                          <Card.Content extra>
-                            <Button 
-                              basic 
-                              inverted 
-                              fluid
-                              onClick={() => handlePlayRecording(session.recordingPath)}
-                            >
-                              <Icon name='play' />
-                              Play Recording
-                            </Button>
-                          </Card.Content>
-                        </Card>
-                      ))
-                  ) : (
-                    <Card style={{ background: 'rgba(255, 255, 255, 0.05)', width: '100%' }}>
-                      <Card.Content textAlign='center'>
-                        <Icon name='music' size='huge' style={{ color: 'rgba(255, 255, 255, 0.2)', margin: '1em 0' }} />
-                        <Card.Description style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                          No recorded sessions yet. Start creating!
-                        </Card.Description>
-                      </Card.Content>
-                    </Card>
-                  )}
-                </Card.Group>
-              )}
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-      
-      <Segment basic textAlign='center' style={{ marginTop: '3em' }}>
-        <p style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-          © 2023 Imogine - Transform your movements into music
-        </p>
-      </Segment>
-      
-      <Modal
-        basic
-        open={isModalOpen}
-        onClose={() => {
-          // Make sure to pause audio when closing modal
-          const audioElement = document.getElementById('recording-audio');
-          if (audioElement) {
-            audioElement.pause();
-          }
-          setIsModalOpen(false);
-        }}
-        size='small'
-      >
-        <Header icon>
-          <Icon name='music' />
-          Session Recording
-        </Header>
-        <Modal.Content>
-          {selectedRecording && (
-            <div style={{ textAlign: 'center' }}>
-              <audio 
-                id="recording-audio"
-                controls 
-                src={selectedRecording}
-                style={{ width: '100%' }}
-                onError={(e) => {
-                  console.error('Audio playback error:', e);
-                  console.error('Audio element error details:', e.target.error);
-                  
-                  // More specific error message based on the error code
-                  let errorMessage = 'Error playing the recording. ';
-                  
-                  if (e.target.error) {
-                    switch (e.target.error.code) {
-                      case e.target.error.MEDIA_ERR_ABORTED:
-                        errorMessage += 'Playback aborted.';
-                        break;
-                      case e.target.error.MEDIA_ERR_NETWORK:
-                        errorMessage += 'Network error occurred.';
-                        break;
-                      case e.target.error.MEDIA_ERR_DECODE:
-                        errorMessage += 'Decoding error. The file might be corrupted.';
-                        break;
-                      case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-                        errorMessage += 'Format not supported or file not found.';
-                        break;
-                      default:
-                        errorMessage += 'Unknown error.';
+              </Segment>
+            </Grid.Column>
+          </Grid.Row>
+          
+          <Grid.Row>
+            <Grid.Column mobile={16} tablet={12} computer={10}>
+              <Segment className="recent-sessions-segment">
+                <Header as='h3' inverted className="section-header">
+                  <Icon name='history' />
+                  Recent Sessions
+                </Header>
+                
+                {sessionsLoading ? (
+                  <Dimmer active inverted>
+                    <Loader inverted>Loading Sessions...</Loader>
+                  </Dimmer>
+                ) : sessionsError ? (
+                  <Message negative icon>
+                    <Icon name='warning sign' />
+                    <Message.Content>
+                      <Message.Header>Error loading sessions</Message.Header>
+                      <p>{sessionsError.message}</p>
+                      {/* Consider logging full error only in dev mode */}
+                      {/* <pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>
+                        {JSON.stringify(sessionsError, null, 2)}
+                      </pre> */}
+                    </Message.Content>
+                  </Message>
+                ) : (
+                  <Card.Group itemsPerRow={3} stackable centered className="session-cards">
+                    {sessionsData?.getUserSessions?.length > 0 ? (
+                      sessionsData.getUserSessions
+                        .filter(session => session?.recordingPath) // Filter out sessions without recordings safely
+                        .map(session => session && ( // Check if session is not null/undefined
+                          <Card key={session.id} className="session-card">
+                            <Card.Content>
+                              <Card.Header className="session-card-header">
+                                <Icon name='music' /> Session #{session.id.substring(0, 6)}
+                              </Card.Header>
+                              <Card.Meta className="session-card-meta">
+                                <Icon name='calendar alternate outline' /> {formatDate(session.startedAt)}
+                              </Card.Meta>
+                              <Card.Description className="session-card-description">
+                                <Icon name='magic' /> 
+                                {countEffects(session.currentEffects) > 0 
+                                  ? `${countEffects(session.currentEffects)} effect type${countEffects(session.currentEffects) > 1 ? 's' : ''} used` 
+                                  : 'No effects applied'}
+                              </Card.Description>
+                            </Card.Content>
+                            <Card.Content extra>
+                              <Button 
+                                basic 
+                                color='blue' 
+                                fluid
+                                icon
+                                labelPosition='left'
+                                onClick={() => handlePlayRecording(session.recordingPath)}
+                                className="play-recording-btn"
+                              >
+                                <Icon name='play' />
+                                Play Recording
+                              </Button>
+                            </Card.Content>
+                          </Card>
+                        ))
+                    ) : (
+                      <Message icon className="no-sessions-message">
+                        <Icon name='meh outline' size='huge' />
+                        <Message.Content>
+                          <Message.Header>No Recorded Sessions Found</Message.Header>
+                          Start a new session above to create some music!
+                        </Message.Content>
+                      </Message>
+                    )}
+                  </Card.Group>
+                )}
+              </Segment>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+        
+        <Segment basic textAlign='center' className="dashboard-footer">
+          <p>© {new Date().getFullYear()} Imogine - All Rights Reserved</p>
+        </Segment>
+        
+        <Modal
+          basic
+          open={isModalOpen}
+          onClose={() => {
+            const audioElement = document.getElementById('recording-audio');
+            if (audioElement) audioElement.pause();
+            setIsModalOpen(false);
+            setSelectedRecording(null); // Clear selection on close
+          }}
+          size='small'
+          className="recording-modal"
+        >
+          <Header icon>
+            <Icon name='sound' />
+            Session Recording
+          </Header>
+          <Modal.Content>
+            {selectedRecording && (
+              <div style={{ textAlign: 'center' }}>
+                <audio 
+                  id="recording-audio"
+                  controls 
+                  autoPlay // Try autoplaying
+                  src={selectedRecording}
+                  style={{ width: '100%' }}
+                  onError={(e) => {
+                    console.error('Audio playback error:', e);
+                    console.error('Audio element error details:', e.target.error);
+                    let errorMessage = 'Error playing the recording. ';
+                    if (e.target.error) {
+                      switch (e.target.error.code) {
+                        case e.target.error.MEDIA_ERR_ABORTED: errorMessage += 'Playback aborted.'; break;
+                        case e.target.error.MEDIA_ERR_NETWORK: errorMessage += 'Network error.'; break;
+                        case e.target.error.MEDIA_ERR_DECODE: errorMessage += 'Decoding error.'; break;
+                        case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED: errorMessage += 'Format not supported or file not found.'; break;
+                        default: errorMessage += 'Unknown error.';
+                      }
                     }
-                  }
-                  
-                  alert(errorMessage);
-                }}
-              />
-              <div style={{ marginTop: '1rem', color: 'white' }}>
-                <p>If the audio doesn't play automatically, click the play button.</p>
+                    // Use a less intrusive way to show error, maybe a Message component
+                    alert(errorMessage); 
+                  }}
+                />
+                <div style={{ marginTop: '1rem', color: 'rgba(255, 255, 255, 0.8)' }}>
+                  <p>Playback should start automatically. If not, please use the controls.</p>
+                </div>
               </div>
-            </div>
-          )}
-        </Modal.Content>
-        <Modal.Actions>
-          <Button color='green' inverted onClick={() => setIsModalOpen(false)}>
-            <Icon name='checkmark' /> Close
-          </Button>
-        </Modal.Actions>
-      </Modal>
-      
-      {isLoading && (
-        <Dimmer active>
-          <Loader size='large'>Preparing Your Session...</Loader>
-        </Dimmer>
-      )}
-    </Container>
+            )}
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color='green' inverted onClick={() => setIsModalOpen(false)}>
+              <Icon name='close' /> Close
+            </Button>
+          </Modal.Actions>
+        </Modal>
+        
+        {isLoading && (
+          <Dimmer active page>
+            <Loader size='large' inverted content='Preparing Your Session...' />
+          </Dimmer>
+        )}
+      </Container>
+    </div>
   );
 }
 
