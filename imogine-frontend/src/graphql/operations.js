@@ -53,3 +53,18 @@ export const GET_RECENT_SESSIONS = gql`
     }
   }
 `;
+
+export const GET_USER_SESSIONS = gql`
+  query GetUserSessions($userId: String!) {
+    getUserSessions(userId: $userId) {
+      id
+      startedAt
+      isActive
+      recordingPath
+      currentEffects {
+        id
+        type
+      }
+    }
+  }
+`;

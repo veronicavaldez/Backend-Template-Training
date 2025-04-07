@@ -29,6 +29,10 @@ const AudioSessionSchema = new Schema({
   startedAt: { 
     type: Date, 
     default: Date.now 
+  },
+  recordingPath: {
+    type: String,
+    default: null
   }
 });
 

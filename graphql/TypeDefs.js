@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server'); 
+const { gql } = require('apollo-server-express'); 
 
 /* from graphQL documentation:
 
@@ -47,28 +47,34 @@ const TypeDefs = gql`
     id: ID!
     userId: String!
     isActive: Boolean!
-    currentEffects: [GestureEffect!]!
+    currentEffects: [GestureEffect]!
     startedAt: String!
+    recordingPath: String
   }
 
   type Query {
     getActiveSession(userId: String!): AudioSession
-    getCurrentEffects(sessionId: ID!): [GestureEffect!]!
+    getCurrentEffects(sessionId: ID!): [GestureEffect]!
+    getUserSessions(userId: String!): [AudioSession]!
   }
 
   type Mutation {
     startSession: AudioSession!
     endSession(sessionId: ID!): Boolean!
-    applyGestureEffect(
-      sessionId: ID!
-      type: String!
-      parameters: JSON!
-    ): GestureEffect!
+    applyGestureEffect(sessionId: ID!, type: String!, parameters: JSON!): GestureEffect!
+    addRecordingToSession(sessionId: ID!, recordingPath: String!): AudioSession!
+    deleteAllRecordings: DeleteRecordingsResult!
+  }
+
+  type DeleteRecordingsResult {
+    success: Boolean!
+    message: String!
+    count: Int!
   }
 
   type Subscription {
     effectApplied(sessionId: ID!): GestureEffect!
-    sessionUpdated(sessionId: ID!): AudioSession!
+    sessionUpdated: AudioSession!
   }
 
   scalar JSON

@@ -61,6 +61,19 @@ module.exports = {
       } catch (error) {
         throw new Error('Error fetching effects');
       }
+    },
+
+    getUserSessions: async (_, { userId }) => {
+      try {
+        console.log(`Fetching sessions for user: ${userId}`);
+        // Find all sessions for this user, sorted by startedAt in descending order
+        const sessions = await AudioSession.find({ userId }).sort({ startedAt: -1 });
+        console.log(`Found ${sessions.length} sessions`);
+        return sessions;
+      } catch (error) {
+        console.error('Error fetching user sessions:', error);
+        throw new Error(`Error fetching user sessions: ${error.message}`);
+      }
     }
   },
 
@@ -130,17 +143,80 @@ module.exports = {
       } catch (error) {
         throw new Error('Error applying effect');
       }
+    },
+
+    addRecordingToSession: async (_, { sessionId, recordingPath }) => {
+      try {
+        // Find and update the session with the new recording path
+        const session = await AudioSession.findByIdAndUpdate(
+          sessionId,
+          { 
+            $set: { recordingPath: recordingPath },
+            $currentDate: { updatedAt: true }
+          },
+          { new: true }
+        );
+        
+        if (!session) {
+          throw new Error(`Session with ID ${sessionId} not found`);
+        }
+        
+        console.log(`Updated session ${sessionId} with recording: ${recordingPath}`);
+        
+        // Publish an update for the session
+        pubsub.publish(SESSION_UPDATED, {
+          sessionUpdated: session
+        });
+        
+        return session;
+      } catch (error) {
+        console.error('Error adding recording to session:', error);
+        throw new Error('Failed to update session with recording');
+      }
+    },
+
+    deleteAllRecordings: async () => {
+      try {
+        // Update all sessions to remove recordingPath
+        const result = await AudioSession.updateMany(
+          { recordingPath: { $exists: true, $ne: null } },
+          { $unset: { recordingPath: "" } }
+        );
+        
+        console.log(`Removed recording paths from ${result.modifiedCount} sessions`);
+        
+        return {
+          success: true,
+          message: `Successfully removed ${result.modifiedCount} recording references from database`,
+          count: result.modifiedCount
+        };
+      } catch (error) {
+        console.error('Error removing recording references:', error);
+        return {
+          success: false,
+          message: `Error: ${error.message}`,
+          count: 0
+        };
+      }
     }
   },
 
   Subscription: {
     effectApplied: {
-      subscribe: (_, { sessionId }) => 
-        pubsub.asyncIterator([`${EFFECT_APPLIED}_${sessionId}`])
+      subscribe: (_, { sessionId }) => {
+        return pubsub.asyncIterator([EFFECT_APPLIED]);
+      },
+      filter: (payload, variables) => {
+        return payload.sessionId === variables.sessionId;
+      }
     },
     sessionUpdated: {
-      subscribe: (_, { sessionId }) => 
-        pubsub.asyncIterator([`${SESSION_UPDATED}_${sessionId}`])
+      subscribe: (_, { sessionId }) => {
+        return pubsub.asyncIterator([SESSION_UPDATED]);
+      },
+      filter: (payload, variables) => {
+        return payload.sessionUpdated.id === variables.sessionId;
+      }
     }
   },
 
@@ -150,5 +226,20 @@ module.exports = {
   },
   AudioSession: {
     startedAt: (parent) => parent.startedAt.toISOString()
+  }
+};
+
+const clearAllRecordingPaths = async () => {
+  try {
+    const result = await AudioSession.updateMany(
+      {}, 
+      { $unset: { recordingPath: "" } }
+    );
+    
+    console.log(`Cleared recording paths for ${result.modifiedCount} sessions`);
+    return result.modifiedCount;
+  } catch (error) {
+    console.error('Error clearing recording paths:', error);
+    throw error;
   }
 };

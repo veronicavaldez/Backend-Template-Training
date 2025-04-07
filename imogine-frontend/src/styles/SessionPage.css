@@ -1,0 +1,171 @@
+.session-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #ffffff;
+  padding-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.session-header {
+  padding: 0.75rem 0 !important;
+  margin-bottom: 0.5rem !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 60px !important;
+}
+
+.back-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  font-size: 0.85rem !important;
+  padding: 0.5rem 0.75rem !important;
+  margin-right: auto !important;
+  margin-left: 1rem !important;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.audio-segment, 
+.guide-segment, 
+.effects-segment {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  margin-bottom: 0.5rem !important;
+  padding: 0.75rem !important;
+}
+
+.record-button {
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.record-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6) !important;
+}
+
+.stop-button {
+  background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.stop-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(255, 65, 108, 0.6) !important;
+}
+
+.save-button {
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.save-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6) !important;
+}
+
+.end-button {
+  background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4) !important;
+  transition: all 0.3s ease !important;
+  margin-top: 0.5rem !important;
+}
+
+.end-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(255, 65, 108, 0.6) !important;
+}
+
+.effect-label {
+  margin-bottom: 0.5rem !important;
+}
+
+.info-message {
+  background: rgba(79, 172, 254, 0.1) !important;
+  border-color: #4facfe !important;
+}
+
+/* Audio player styling */
+audio {
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+audio::-webkit-media-controls-panel {
+  background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);
+}
+
+audio::-webkit-media-controls-play-button,
+audio::-webkit-media-controls-volume-slider,
+audio::-webkit-media-controls-mute-button,
+audio::-webkit-media-controls-timeline {
+  filter: invert(100%);
+}
+
+/* Compact layout adjustments */
+.session-container {
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+.session-grid {
+  height: 100%;
+}
+
+.session-column {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.audio-segment {
+  flex: 1;
+}
+
+.hand-detector-segment {
+  height: 280px;
+}
+
+.guide-segment {
+  flex: 0 0 auto;
+}
+
+.effects-segment {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Compact text */
+.compact-header {
+  font-size: 1.1rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.compact-list .item {
+  padding: 0.4rem 0 !important;
+}
+
+.compact-list .description {
+  font-size: 0.85rem !important;
+}
+
+.visualization-canvas {
+  height: 100px !important;
+} 
