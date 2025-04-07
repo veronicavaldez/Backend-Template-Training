@@ -74,6 +74,18 @@ module.exports = {
         console.error('Error fetching user sessions:', error);
         throw new Error(`Error fetching user sessions: ${error.message}`);
       }
+    },
+
+    getUserSessionCount: async (_, { userId }) => {
+      try {
+        console.log(`Counting sessions for user: ${userId}`);
+        const count = await AudioSession.countDocuments({ userId });
+        console.log(`Found ${count} sessions`);
+        return count;
+      } catch (error) {
+        console.error('Error counting user sessions:', error);
+        throw new Error(`Error counting user sessions: ${error.message}`);
+      }
     }
   },
 

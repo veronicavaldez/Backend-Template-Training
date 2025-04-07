@@ -56,6 +56,7 @@ const TypeDefs = gql`
     getActiveSession(userId: String!): AudioSession
     getCurrentEffects(sessionId: ID!): [GestureEffect]!
     getUserSessions(userId: String!): [AudioSession]!
+    getUserSessionCount(userId: String!): Int!
   }
 
   type Mutation {

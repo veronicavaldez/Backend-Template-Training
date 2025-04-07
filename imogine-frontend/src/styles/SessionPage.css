@@ -211,6 +211,10 @@ audio::-webkit-media-controls-timeline {
   padding: 0.6em 1em !important;
 }
 
+.header-buttons .button:hover {
+  filter: brightness(1.15);
+}
+
 .end-button-header {
   box-shadow: 0 2px 8px rgba(255, 65, 108, 0.3) !important;
 }
@@ -263,6 +267,12 @@ audio::-webkit-media-controls-timeline {
 
 .recording-controls .button {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out !important;
+}
+
+.recording-controls .button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
 }
 
 .record-button {
@@ -289,6 +299,10 @@ audio::-webkit-media-controls-timeline {
 
 .play-button:hover, .save-button:hover, .record-again-button:hover {
    filter: brightness(1.1);
+}
+
+.play-button, .save-button, .record-again-button {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, filter 0.2s ease !important;
 }
 
 .status-message-area {
@@ -358,37 +372,45 @@ audio::-webkit-media-controls-timeline {
 }
 
 .gesture-list .item {
-  padding: 0.6em 0 !important;
+  padding: 0.8em 0 !important;
   display: flex !important;
   align-items: center !important;
 }
 
 .gesture-list .icon {
-  font-size: 1.3em !important;
-  margin-right: 0.8em !important;
-  width: 30px;
+  font-size: 1.6em !important;
+  margin-right: 1.2em !important;
+  width: 40px;
   text-align: center;
 }
 
 .gesture-list .header {
   color: #ffffff !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
+  font-size: 1.05em !important;
   margin-bottom: 0.1em !important;
 }
 
 .gesture-list .description {
-  font-size: 0.9em !important;
+  font-size: 0.95em !important;
   color: rgba(255, 255, 255, 0.7) !important;
 }
 
 /* Effects Segment */
 .effects-segment {
+  min-height: 120px; /* Give it some base height */
   flex-grow: 1;
   overflow-y: auto;
 }
 
 .effect-display {
   margin-top: 0.5em;
+  transition: background-color 0.3s ease;
+}
+
+.effect-display.updated {
+  background-color: rgba(79, 172, 254, 0.1); 
+  animation: fadeHighlight 1s ease-out;
 }
 
 .effects-list .item {
@@ -424,6 +446,12 @@ audio::-webkit-media-controls-timeline {
 
 .info-message .header {
   color: #cce7ff !important;
+}
+
+/* Keyframes for the highlight fade */
+@keyframes fadeHighlight {
+  from { background-color: rgba(79, 172, 254, 0.2); }
+  to { background-color: transparent; }
 }
 
 /* Modal Styling */

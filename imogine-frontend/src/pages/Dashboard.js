@@ -166,39 +166,40 @@ function Dashboard() {
                   <Card.Group itemsPerRow={3} stackable centered className="session-cards">
                     {sessionsData?.getUserSessions?.length > 0 ? (
                       sessionsData.getUserSessions
-                        .filter(session => session?.recordingPath) // Filter out sessions without recordings safely
-                        .map(session => session && ( // Check if session is not null/undefined
-                          <Card key={session.id} className="session-card">
-                            <Card.Content>
-                              <Card.Header className="session-card-header">
-                                <Icon name='music' /> Session #{session.id.substring(0, 6)}
-                              </Card.Header>
-                              <Card.Meta className="session-card-meta">
-                                <Icon name='calendar alternate outline' /> {formatDate(session.startedAt)}
-                              </Card.Meta>
-                              <Card.Description className="session-card-description">
-                                <Icon name='magic' /> 
-                                {countEffects(session.currentEffects) > 0 
-                                  ? `${countEffects(session.currentEffects)} effect type${countEffects(session.currentEffects) > 1 ? 's' : ''} used` 
-                                  : 'No effects applied'}
-                              </Card.Description>
-                            </Card.Content>
-                            <Card.Content extra>
-                              <Button 
-                                basic 
-                                color='blue' 
-                                fluid
-                                icon
-                                labelPosition='left'
-                                onClick={() => handlePlayRecording(session.recordingPath)}
-                                className="play-recording-btn"
-                              >
-                                <Icon name='play' />
-                                Play Recording
-                              </Button>
-                            </Card.Content>
-                          </Card>
-                        ))
+                         .filter(session => session?.recordingPath) // Filter out sessions without recordings safely
+                         .map((session, index) => session && ( 
+                           // Pass index as CSS variable for animation delay
+                           <Card key={session.id} className="session-card" style={{ '--card-index': index }}>
+                             <Card.Content>
+                               <Card.Header className="session-card-header">
+                                 <Icon name='history' /> Session #{index + 1}
+                               </Card.Header>
+                               <Card.Meta className="session-card-meta">
+                                 <Icon name='calendar alternate outline' /> {formatDate(session.startedAt)}
+                               </Card.Meta>
+                               <Card.Description className="session-card-description">
+                                 <Icon name='magic' /> 
+                                 {countEffects(session.currentEffects) > 0 
+                                   ? `${countEffects(session.currentEffects)} effect type${countEffects(session.currentEffects) > 1 ? 's' : ''} used` 
+                                   : 'No effects applied'}
+                               </Card.Description>
+                             </Card.Content>
+                             <Card.Content extra>
+                               <Button 
+                                 basic 
+                                 color='blue' 
+                                 fluid
+                                 icon
+                                 labelPosition='left'
+                                 onClick={() => handlePlayRecording(session.recordingPath)}
+                                 className="play-recording-btn"
+                               >
+                                 <Icon name='play' />
+                                 Play Recording
+                               </Button>
+                             </Card.Content>
+                           </Card>
+                         ))
                     ) : (
                       <Message icon className="no-sessions-message">
                         <Icon name='meh outline' size='huge' />

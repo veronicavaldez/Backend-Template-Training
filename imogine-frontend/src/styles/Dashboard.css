@@ -127,13 +127,17 @@ body {
   background: rgba(40, 50, 80, 0.5) !important; /* Darker card background */
   border-radius: 8px !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease !important; /* Smoother transition */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  opacity: 0; /* Start hidden for animation */
+  animation: fadeInCard 0.5s ease forwards; /* Apply fade-in animation */
+  animation-delay: calc(var(--card-index) * 0.1s); /* Stagger animation based on index */
 }
 
 .session-card:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3) !important;
+  transform: translateY(-5px) !important; /* Slightly more lift */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35) !important; /* Enhanced shadow */
+  background: rgba(50, 60, 90, 0.7) !important; /* Subtle background change on hover */
 }
 
 .session-card-header {
@@ -201,6 +205,18 @@ body {
   font-size: 0.9em;
 }
 
+/* Define the fade-in animation */
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .main-title {
@@ -226,6 +242,7 @@ body {
   .session-card {
     width: calc(90% - 1em) !important; /* Make cards wider on mobile */
     margin: 0.5em auto !important;
+    animation-delay: 0s !important; /* Disable stagger on mobile if desired */
   }
 }
 
