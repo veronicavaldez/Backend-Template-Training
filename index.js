@@ -1,3 +1,11 @@
+/**
+ * Main application entry point.
+ * Sets up an Express server with Apollo Server (GraphQL), WebSocket support for subscriptions,
+ * middleware for CORS, static file serving (recordings), and endpoints for file uploads
+ * and cross-browser audio playback (with on-the-fly conversion for Safari).
+ * Connects to MongoDB using Mongoose.
+ */
+
 //Need to npm install apollo-server
 
 /*
@@ -56,6 +64,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const AudioSession = require('./models/AudioSession');
+const ffmpeg = require('fluent-ffmpeg');
 
 dotenv.config();
 
@@ -79,7 +88,7 @@ const storage = multer.diskStorage({
     const timestamp = Date.now();
     const safeFilename = `session-${req.body.sessionId}-${timestamp}.${fileExtension}`;
     
-    // Store web path for future use
+    // Store web path for potential use in response/database
     file.webPath = `/recordings/${safeFilename}`;
     
     cb(null, safeFilename);
@@ -89,6 +98,11 @@ const storage = multer.diskStorage({
 // Set up multer with the storage configuration
 const upload = multer({ storage });
 
+/**
+ * Initializes and starts the Express application, Apollo Server, WebSocket server,
+ * and connects to MongoDB.
+ * @returns {Promise<http.Server>} A promise that resolves with the started HTTP server instance.
+ */
 async function startServer() {
   const app = express();
   const httpServer = createServer(app);
@@ -109,6 +123,7 @@ async function startServer() {
       async serverWillStart() {
         return {
           async drainServer() {
+            // Proper cleanup for WebSocket server on shutdown
             await serverCleanup.dispose();
           },
         };
@@ -119,7 +134,7 @@ async function startServer() {
   await server.start();
   server.applyMiddleware({ app });
 
-  // Add CORS middleware
+  // Add CORS middleware (apply before other routes)
   app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -208,7 +223,7 @@ async function startServer() {
     }
   });
 
-  // Serve recordings from the recordings directoƒry
+  // Serve recordings statically from the recordings directory
   app.use('/recordings', express.static(path.join(__dirname, 'recordings')));
 
   // Enable CORS
@@ -291,7 +306,7 @@ async function startServer() {
         return res.status(404).send('File not found');
       }
       
-      // For WebM files requested by Safari, convert to MP4
+      // For WebM files requested by Safari, convert to MP4 on-the-fly
       if (isSafari && originalExtension === '.webm') {
         console.log('Safari requesting WebM file - converting to MP4');
         
@@ -308,7 +323,6 @@ async function startServer() {
         // Convert WebM to MP4 using ffmpeg
         console.log('Converting from', filePath, 'to', mp4Path);
         
-        const ffmpeg = require('fluent-ffmpeg');
         await new Promise((resolve, reject) => {
           ffmpeg(filePath)
             .outputFormat('mp4')

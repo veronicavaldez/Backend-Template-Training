@@ -372,7 +372,7 @@ audio::-webkit-media-controls-timeline {
 }
 
 .gesture-list .item {
-  padding: 0.8em 0 !important;
+  padding: 0.6em 0 !important;
   display: flex !important;
   align-items: center !important;
 }
@@ -392,7 +392,7 @@ audio::-webkit-media-controls-timeline {
 }
 
 .gesture-list .description {
-  font-size: 0.95em !important;
+  font-size: 1.2em !important;
   color: rgba(255, 255, 255, 0.7) !important;
 }
 

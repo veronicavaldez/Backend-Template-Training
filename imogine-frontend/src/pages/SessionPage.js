@@ -529,7 +529,6 @@ function SessionPage() {
                   <Icon name='sound' />
                   <Header.Content>
                     Imogine Session
-                    <Header.Subheader>ID: {sessionId.substring(0, 8)}...</Header.Subheader>
                   </Header.Content>
                 </Header>
               </Grid.Column>
